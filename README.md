@@ -1,7 +1,9 @@
 # Power flow solution in distribution networks with PV nodes
 Código en Matlab para resolver el problema de flujo de potencia en una red radial con generación distribuida
 
-En esta primera aproximación al problema, la solución implementada no es adaptable a la red.
+En esta primera aproximación al problema la solución implementada no es adaptable a la red.
+
+![Una imagen cualquiera](https://drive.google.com/file/d/12HgxUq1ahVt-0pB80TKAHDwpIMp_5sm4/view)
 
 ## Próximas mejoras
 * Implementar el algoritmo en red radial con bifurcaciones.
