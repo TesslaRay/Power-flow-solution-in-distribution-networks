@@ -64,6 +64,7 @@ for IT = 1:10
     end
     
 %     disp('Ajuste')
+    % AJUSTE
     Vb_k(1) = Vb_k(2) + Z(1)*Ibr(1);
 
 %     how do I adjust the node voltage and the branch current?
