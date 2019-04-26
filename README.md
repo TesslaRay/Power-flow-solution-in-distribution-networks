@@ -3,9 +3,12 @@ Código en Matlab para resolver el problema de flujo de potencia en una red radi
 
 En esta primera aproximación al problema la solución implementada no es adaptable a la red.
 
-![Red radial](http://drive.google.com/uc?export=view&id=1C98gt8ytm5kzrlOH-70u_Thy-qXdFOp2)
+![Red radial_1](http://drive.google.com/uc?export=view&id=1C98gt8ytm5kzrlOH-70u_Thy-qXdFOp2)
 
 En la imagen superior es posible apreciar la primera red en la que se utiliza el algoritmo.
+
+![Red radial_2](http://drive.google.com/uc?export=view&id=11J5aTTDzJQCf4lm0Lc8kwWw6tZICWD7vr)
+
 
 ## Próximas mejoras
 * Implementar el algoritmo en red radial con bifurcaciones.
