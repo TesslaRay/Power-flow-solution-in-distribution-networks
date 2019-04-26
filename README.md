@@ -5,6 +5,8 @@ En esta primera aproximación al problema la solución implementada no es adapta
 
 ![Red radial](http://drive.google.com/uc?export=view&id=1C98gt8ytm5kzrlOH-70u_Thy-qXdFOp2)
 
+En la imagen superior es posible apreciar la primera red en la que se utiliza el algoritmo.
+
 ## Próximas mejoras
 * Implementar el algoritmo en red radial con bifurcaciones.
 * Implementar el algortmo en cualquier red radial con bifurcaciones.
