@@ -12,7 +12,7 @@ En la imagen superior es posible apreciar la primera red en la que se utiliza el
 ## Próximas mejoras
 * ~~Implementar el algoritmo en red radial con bifurcaciones.~~
 * Implementar el algortmo en cualquier red radial con bifurcaciones.
-* Implementar el algoritmo con nodos PV.
+* Incluir nodos PV.
 
 ## Referencias
 ```
