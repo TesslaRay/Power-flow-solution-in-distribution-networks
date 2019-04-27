@@ -39,49 +39,48 @@ MVAb = 100;                 % base MVA
 KVb  = 11;                  % base kV
 Zb   = (KVb^2)/MVAb;        % base impedance
       
-
 Z = complex(linedata(:,4),linedata(:,5))/Zb;
 S = complex(loaddata(:,2),loaddata(:,3))/(1000*MVAb);
 
 branch = [7,6,5,4,3,2,1; 11,10,9,8,2,1,0];
 branchnode = [2];
+endnode = [7,11];
 
-Vb_k = ones(11,1);
-Vb_k1 = ones(11,1);
+Vb_k = ones(length(loaddata(:,1)),1);
+Vb_k1 = ones(length(loaddata(:,1)),1);
 
-e = 1E-10;                   % tolerancia
+e = 1E-4;                   % tolerancia
 
-Ish(7) = complex(1,0);
-Ish(11) = complex(1,0);
+Ish(endnode) = complex(1,0);
 
-for IT = 1:10
+for IT = 1:100
     
     Zsh = conj(Vb_k.^2./S);
     
     for i = 1:length(branch(1,:)) - 1
 %         branch(1,i)
         
-        if branch(1,i) == 7
+        if branch(1,i) == branch(1,1)
 %             disp('nodo terminal')
             Ibr(branch(1,i) - 1,1) = Ish(branch(1,i));
 
             Vb_k(branch(1,i)) = Ish(branch(1,i))*Zsh(branch(1,i));
             
-        elseif branch(1,i) == 2
+        elseif branch(1,i) == branchnode(1)
 %             disp('nodo branch')
             
             Vb_k(branch(1,i)) = Vb_k(branch(1,i - 1)) + Z(branch(1,i))*Ibr(branch(1,i));
             
-            Ibr(10) = Ish(11);
+            Ibr(branch(2,1) - 1) = Ish(branch(2,1));
 
-            Vb_k(11) = Ish(11)*Zsh(11);
+            Vb_k(branch(2,1)) = Ish(branch(2,1))*Zsh(branch(2,1));
             
             for j = 2:length(branch(2,:))
                                 
-                if branch(2,j) == 2
+                if branch(2,j) == branchnode(1)
                     break
                 end
-%                 branch(2,j)
+                
                 Vb_k(branch(2,j)) = Vb_k(branch(2,j - 1)) + Z(branch(2,j))*Ibr(branch(2,j));
 
                 Ish(branch(2,j)) = Vb_k(branch(2,j))/Zsh(branch(2,j));
@@ -89,14 +88,14 @@ for IT = 1:10
                 Ibr(branch(2,j) - 1,1) = Ish(branch(2,j)) + Ibr(branch(2,j));
                                 
             end
+    
+            Vprima = Vb_k(branch(1,1) + 1) + Z(branch(1,1))*Ibr(branch(1,1));
             
-            Vprima = Vb_k(8) + Z(7)*Ibr(7);           
+            Ish(branch(2,1)) = Vb_k(branchnode(1))*Ish(branch(2,1))/Vprima;
             
-            Ish(11) = Vb_k(2)*Ish(11)/Vprima;
-            
-            Vb_k(11) = Ish(11)*Zsh(11);
+            Vb_k(branch(2,1)) = Ish(branch(2,1))*Zsh(branch(2,1));
 
-            Ibr(10) = Ish(11);
+            Ibr(branch(2,1) - 1) = Ish(branch(2,1));
             
             for j = 2:length(branch(2,:))
 %                 branch(2,j)
@@ -134,18 +133,19 @@ for IT = 1:10
 
     Vb_k(1) = Vb_k(2) + Z(1)*Ibr(1);
     
-    Ish(7) = complex(1,0)*Ish(7)/Vb_k(1);
+    Ish(branch(1,1)) = complex(1,0)*Ish(branch(1,1))/Vb_k(1);
     
     for x = 1:length(branch(1,:))
 %         branch(1,x)
                 
-        if branch(1,x) == 7
+        if branch(1,x) == branch(1,1)
 %             disp('ajuste nodo terminal')
                     
             Vb_k1(branch(1,x),1) = Zsh(branch(1,x))*Ish(branch(1,x));
                     
             Ibr(branch(1,x) - 1,1) = Ish(branch(1,x));
-        elseif branch(1,x) == 2
+            
+        elseif branch(1,x) == branchnode(1)
 %             disp('ajuste nodo branch')
             
             Vb_k1(branch(1,x)) = Vb_k1(branch(1,x - 1)) + Z(branch(1,x))*Ibr(branch(1,x));
@@ -196,7 +196,7 @@ for IT = 1:10
                         
             Ibr(branch(1,i) - 1,1) = Ish(branch(1,i)) + Ibr(branch(1,i)) + Ibr(7);
             
-        elseif branch(1,x) == 1
+        elseif branch(1,x) == branch(1,length(branch(1,:)))
 %             disp('ajuste nodo inicial')
                     
             Vb_k1(branch(1,x)) = Vb_k1(branch(1,x - 1)) + Z(branch(1,x))*Ibr(branch(1,x));
