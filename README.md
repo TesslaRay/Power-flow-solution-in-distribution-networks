@@ -4,7 +4,7 @@ Código en Matlab para resolver el problema de flujo de potencia en una red radi
 En esta primera aproximación al problema la solución implementada no es adaptable a la red.
 
 <p align="center">
-  <img width="600" height="400" src="http://drive.google.com/uc?export=view&id=1J5aTTDzJQCf4lm0Lc8kwWw6tZICWD7vr">
+  <src="http://drive.google.com/uc?export=view&id=1J5aTTDzJQCf4lm0Lc8kwWw6tZICWD7vr">
 </p>
 
 En la imagen superior es posible apreciar la primera red en la que se utiliza el algoritmo.
