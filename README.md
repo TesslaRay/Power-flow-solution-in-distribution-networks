@@ -7,7 +7,7 @@ En esta primera aproximación al problema la solución implementada no es adapta
   <img width="600" height="300" src="http://drive.google.com/uc?export=view&id=1J5aTTDzJQCf4lm0Lc8kwWw6tZICWD7vr">
 </p>
 
-En la imagen superior es posible apreciar la primera red en la que se utiliza el algoritmo.
+En la imagen superior es posible apreciar el sistema IEEE de 33 barras de distribución, en el cual se simulo el algoritmo.
 
 ## Próximas mejoras
 * ~~Implementar el algoritmo en red radial con bifurcaciones.~~
