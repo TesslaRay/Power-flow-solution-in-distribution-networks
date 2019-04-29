@@ -9,6 +9,8 @@ En esta primera aproximación al problema la solución implementada no incluye n
 
 En la imagen superior es posible apreciar el sistema IEEE de 33 barras de distribución, en el cual se simulo el algoritmo.
 
+El mètodo implementado para el análisis de la red de distribución radial es basado en el algoritmo backward, que considera en cada iteración las cargas en los nodos modeladas como impedancias constantes calculadas en función de la potencia y la tensión de la barra. Una vez que se han determinadp los voltajes de barra, se comparan con lo que se han utilizado para evaluar las impedancias de carga. Si el error( en cada barra) es menor a un valor prefijado (tolerancia), el proceso iterativo se detiene, de lo contrario se inicia otra iteración.
+
 ## Próximas mejoras
 * ~~Implementar el algoritmo en red radial con bifurcaciones.~~
 * ~~Implementar el algortmo en cualquier red radial con bifurcaciones.~~
