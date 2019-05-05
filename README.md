@@ -1,7 +1,5 @@
-# Power flow solution in distribution networks with PV nodes
+# Power flow solution in distribution networks
 Code in Matlab to solve the problem of the power flow in radial network with distributed generation.
-
-In this first approach to the problem, the implemented solution does not inluye PV nodes.
 
 <p align="center">
   <img width="600" height="300" src="http://drive.google.com/uc?export=view&id=1J5aTTDzJQCf4lm0Lc8kwWw6tZICWD7vr">
@@ -14,7 +12,6 @@ The method implemented for the analysis of the radial distribution network is ba
 ## Next updates
 * ~~Implement the algorithm in radial network with bifurcations.~~
 * ~~Implement the algorithm in any radial network with bifurcations.~~
-* Include PV nodes.
 
 ## References
 ```
