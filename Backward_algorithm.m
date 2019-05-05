@@ -85,10 +85,10 @@ MVAb = 100;                 % base MVA
 KVb  = 11;                  % base kV
 Zb   = (KVb^2)/MVAb;        % base impedance
 
-% Impedancia
+% Impedance
 Z = complex(linedata(:,4),linedata(:,5))/Zb;
 
-% Potencia
+% Power
 S = complex(loaddata(:,2),loaddata(:,3))/(1000*MVAb);
 
 Pd = loaddata(:,2)';
@@ -104,7 +104,7 @@ Vb_k = ones(length(loaddata(:,1)),1);
 Vb_k1 = ones(length(loaddata(:,1)),1);
 Ibr = zeros(length(loaddata(:,1)) - 1,1);
 
-e = 1E-6;                   % tolerancia
+e = 1E-6;                   % tolerance
 
 Ish(endnode) = complex(1,0);
 
@@ -114,16 +114,13 @@ for IT = 1:100
     
     b = 1;
     for i = 1:length(largepath(1,:)) - 1
-%         branch(i)
         
         if largepath(1,i) == largepath(1)
-%             disp('nodo terminal')
             Ibr(largepath(i) - 1,1) = Ish(largepath(i));
 
             Vb_k(largepath(i)) = Ish(largepath(i))*Zsh(largepath(i));
             
         elseif largepath(i) == branchnode(b)
-%             disp('nodo branch')
             
             Vb_k(largepath(i)) = Vb_k(largepath(i - 1)) + Z(largepath(i))*Ibr(largepath(i));
             
@@ -137,7 +134,6 @@ for IT = 1:100
                     j = j - 1;
                     break
                 end
-%                 fork(b,j)
                 
                 Vb_k(fork(b,j)) = Vb_k(fork(b,j - 1)) + Z(fork(b,j))*Ibr(fork(b,j));
 
@@ -148,24 +144,20 @@ for IT = 1:100
     
             Vprima = Vb_k(fork(b,j)) + Z(fork(b,j) - 1)*Ibr(fork(b,j) - 1);
             
-            Ish(fork(b,1)) = Vb_k(largepath(i))*Ish(fork(b,1))/Vprima;
+            k = Vb_k(largepath(i))/Vprima;           
             
-            Vb_k(fork(b,1)) = Ish(fork(b,1))*Zsh(fork(b,1));
-
-            Ibr(fork(b,1) - 1) = Ish(fork(b,1));
-            
-            for j = 2:length(fork)
+            for j = 1:length(fork)
                
                 if fork(b,j) == 0
                     j = j - 1;                    
                     break
                 end
                 
-                Vb_k(fork(b,j)) = Vb_k(fork(b,j - 1)) + Z(fork(b,j))*Ibr(fork(b,j));
+                Vb_k(fork(b,j)) = Vb_k(fork(b,j)) * k;
 
-                Ish(fork(b,j)) = Vb_k(fork(b,j))/Zsh(fork(b,j));
+                Ish(fork(b,j)) = Ish(fork(b,j))* k;
 
-                Ibr(fork(b,j) - 1) = Ish(fork(b,j)) + Ibr(fork(b,j));
+                Ibr(fork(b,j) - 1) = Ibr(fork(b,j) - 1) * k;
                                 
             end
             
@@ -174,7 +166,6 @@ for IT = 1:100
             Ibr(largepath(i) - 1) = Ish(largepath(i)) + Ibr(largepath(i)) + Ibr(fork(b,j) - 1);
             b = b + 1;
         else
-%             disp('nodo normal')
             
             Vb_k(largepath(i)) = Vb_k(largepath(i - 1)) + Z(largepath(i))*Ibr(largepath(i));
 
@@ -185,93 +176,15 @@ for IT = 1:100
 
     end
     
-    % AJUSTE
- %     disp('Ajuste')
-
+    % Correction
     Vb_k(1) = Vb_k(2) + Z(1)*Ibr(1);
     
     b = 1;
-    Ish(largepath(1)) = complex(1,0)*Ish(largepath(1))/Vb_k(1);
+    k = complex(1,0)/Vb_k(1);
     
-    for x = 1:length(largepath)
-%         branch(x)
-                
-        if largepath(x) == largepath(1)
-%             disp('ajuste nodo terminal')
-                    
-            Vb_k1(largepath(x),1) = Zsh(largepath(x))*Ish(largepath(x));
-                    
-            Ibr(largepath(x) - 1) = Ish(largepath(x));
-            
-        elseif largepath(x) == branchnode(b)
-%             disp('ajuste nodo branch')
-            
-            Vb_k1(largepath(x)) = Vb_k1(largepath(x - 1)) + Z(largepath(x))*Ibr(largepath(x));                        
-            
-            Ibr(fork(b,1) - 1) = Ish(fork(b,1));
-
-            Vb_k1(fork(b,1)) = Ish(fork(b,1))*Zsh(fork(b,1));
-            
-            for j = 2:length(fork)
-                                
-                if fork(b,j) == 0
-                    j = j -1;
-                    break
-                end                               
-                               
-                Vb_k1(fork(b,j)) = Vb_k1(fork(b,j - 1)) + Z(fork(b,j))*Ibr(fork(b,j));
-
-                Ish(fork(b,j)) = Vb_k1(fork(b,j))/Zsh(fork(b,j));
-
-                Ibr(fork(b,j) - 1) = Ish(fork(b,j)) + Ibr(fork(b,j));                               
-                                
-            end
-
-            Vprima = Vb_k1(fork(b,j)) + Z(fork(b,j) - 1)*Ibr(fork(b,j) - 1);
-            
-            Ish(fork(b,1)) = Vb_k1(largepath(x))*Ish(fork(b,1))/Vprima;
-            
-            Vb_k1(fork(b,1)) = Ish(fork(b,1))*Zsh(fork(b,1));          
-
-            Ibr(fork(b,1) - 1) = Ish(fork(b,1));
-
-            for j = 2:length(fork)
-                
-                if fork(b,j) == 0
-                    j = j - 1;
-                    break
-                end
-                                
-                Vb_k1(fork(b,j)) = Vb_k1(fork(b,j - 1)) + Z(fork(b,j))*Ibr(fork(b,j));
-
-                Ish(fork(b,j)) = Vb_k1(fork(b,j))/Zsh(fork(b,j));
-
-                Ibr(fork(b,j) - 1) = Ish(fork(b,j)) + Ibr(fork(b,j));
-            end
-            
-            Ish(largepath(x)) = Vb_k1(largepath(x))/Zsh(largepath(x));
-                        
-            Ibr(largepath(x) - 1) = Ish(largepath(x)) + Ibr(largepath(x)) + Ibr(fork(b,j) - 1);
-            
-            if b < length(branchnode)
-                b = b + 1;
-            end
-        elseif largepath(x) == largepath(length(largepath))
-%             disp('ajuste nodo inicial')
-                    
-            Vb_k1(largepath(x)) = Vb_k1(largepath(x - 1)) + Z(largepath(x))*Ibr(largepath(x));
-                    
-        else
-%             disp('ajuste nodo normal')
-                    
-            Vb_k1(largepath(x)) = Vb_k1(largepath(x - 1)) + Z(largepath(x))*Ibr(largepath(x));
-                    
-            Ish(largepath(x)) = Vb_k1(largepath(x))/Zsh(largepath(x));
-                    
-            Ibr(largepath(x) - 1) = Ish(largepath(x)) + Ibr(largepath(x));
-                    
-        end
-    end
+    Vb_k1 = Vb_k * k;
+    Ish = Ish * k;
+    Ibr = Ibr * k;
     
     if abs(Vb_k - Vb_k1) < e
         break
@@ -286,7 +199,7 @@ IT;
 Vfinal=[abs(Vb_k) angle(Vb_k)*180/pi];
 Ifinal=[abs(Ibr) angle(Ibr)*180/pi];
 
-% Cálculo de perdidas
+% Losses
 PL = 0;
 QL = 0;
 for i=1:32
@@ -318,7 +231,7 @@ Pgent = sum(Pg);
 Qgent = sum(Qg);
 
 
-% Mostrar resultados
+% Results
 tech=('             Radial Distribution Load Flow Solution   ');
 disp(tech)
 disp('=================================================================')
@@ -341,4 +254,4 @@ disp('=================================================================')
     fprintf(' %10.4f', Pgent), fprintf(' %10.4f\n\n\n', Qgent)
 
     
-fprintf('Número de iteraciones: %5g\n', IT)    
+fprintf('Número de iteraciones: %5g\n', IT)

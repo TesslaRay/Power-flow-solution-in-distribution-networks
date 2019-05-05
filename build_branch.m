@@ -1,18 +1,20 @@
 function [largepath, fork, branchnode, endnode] = build_branch(x,y)
-% Función que construye los conjuntos de vectores necesarios para 
-% el algoritmo Backward.
+% Constructs the necessary vectors to solve the backward algorithm
 %   Input:
 %       x: linedata
 %       y: loaddata
 %   Output:
-%       largepath: rama más larga en la red radial
-%       fork: nodos desde el nodo terminal hasta el nodo 'branching'
-%       branchnode: nodos 'branching'
-%       endnode: nodos terminales
+%       largepath: Longest branch in the radial network
+%       fork: nodes from the terminal node to the 'branching' node
+%       branchnode: 'branching' nodes
+%       endnode: terminal nodes
     
     br = length(x(:,1)); % number of branch
     bs = length(y(:,1)); % number of buses 
-
+    
+    branchnode = [0];
+    fork = [0];
+    
     %Incidence matrix
     Incidence = zeros(br,bs);   % initilization for zero matrix
     for i = 1:br
@@ -104,6 +106,10 @@ function [largepath, fork, branchnode, endnode] = build_branch(x,y)
             end
             fork(j-1,i) = branch(j,i); 
         end
+    end
+    
+    if isempty(branchnode)  
+        branchnode = [0];
     end
     
 end
